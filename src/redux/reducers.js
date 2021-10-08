@@ -18,15 +18,7 @@ const items = createReducer([], {
     return payload;
   },
   [addContactSuccess]: (state, { payload }) => {
-    const nameArray = state.map(item => {
-      return item.name;
-    });
-    if (nameArray.includes(payload.name)) {
-      window.alert(`${payload.name} is already in contacts.`);
-      return state;
-    } else {
-      return [...state, payload];
-    }
+    return [...state, payload];
   },
   [deleteContactSuccess]: (state, { payload }) => {
     return state.filter(({ id }) => id !== payload);
@@ -40,7 +32,7 @@ const filter = createReducer('', {
 });
 
 const error = createReducer(null, {
-  [addContactError]: (_, action) => action.payload,
+  [addContactError]: (_, action) => window.alert(action.payload),
   [addContactRequest]: () => null,
   [deleteContactError]: (_, action) => action.payload,
   [deleteContactRequest]: () => null,

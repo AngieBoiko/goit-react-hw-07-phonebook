@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 import {
   addContactRequest,
   addContactSuccess,
@@ -11,28 +9,49 @@ import {
   fetchContactsSuccess,
   fetchContactsError,
 } from './actions';
+import {
+  addContactAPI,
+  fetchContactsAPI,
+  deleteContactAPI,
+} from '../services/contactsAPI';
 
-axios.defaults.baseURL = 'http://localhost:3000';
-
-export const fetchContacts = () => dispatch => {
+export const fetchContacts = () => async dispatch => {
   dispatch(fetchContactsRequest());
-  axios
-    .get('/contacts')
-    .then(({ data }) => dispatch(fetchContactsSuccess(data)))
-    .catch(error => dispatch(fetchContactsError(error)));
+  try {
+    const contacts = await fetchContactsAPI();
+    dispatch(fetchContactsSuccess(contacts));
+  } catch (error) {
+    dispatch(fetchContactsError(error));
+  }
 };
-export const addContact = contact => dispatch => {
+export const addContact = contact => async dispatch => {
   dispatch(addContactRequest());
-  axios
-    .post('/contacts', contact)
-    .then(({ data }) => dispatch(addContactSuccess(data)))
-    .catch(error => dispatch(addContactError(error)));
+  const gettingData = await fetchContactsAPI();
+  console.log(gettingData);
+  if (gettingData) {
+    const nameArray = gettingData.map(item => {
+      return item.name;
+    });
+    console.log(nameArray);
+    if (!nameArray.includes(contact.name)) {
+      try {
+        const addingContact = await addContactAPI(contact);
+        dispatch(addContactSuccess(addingContact));
+      } catch (error) {
+        dispatch(addContactError(error));
+      }
+    } else {
+      dispatch(addContactError(`${contact.name} is already in contacts.`));
+    }
+  }
 };
 
-export const deleteContact = id => dispatch => {
+export const deleteContact = id => async dispatch => {
   dispatch(deleteContactRequest());
-  axios
-    .delete(`/contacts/${id}`)
-    .then(() => dispatch(deleteContactSuccess(id)))
-    .catch(error => dispatch(deleteContactError(error)));
+  try {
+    await deleteContactAPI(id);
+    dispatch(deleteContactSuccess(id));
+  } catch (error) {
+    dispatch(deleteContactError(error));
+  }
 };
