@@ -1,14 +1,23 @@
 import { combineReducers } from 'redux';
 import { createReducer } from '@reduxjs/toolkit';
-import { addContact, deleteContact, filterContact } from './actions';
+import {
+  addContactRequest,
+  addContactSuccess,
+  addContactError,
+  deleteContactRequest,
+  deleteContactSuccess,
+  deleteContactError,
+  filterContacts,
+  fetchContactsRequest,
+  fetchContactsSuccess,
+  fetchContactsError,
+} from './actions';
 
-const contactsInitialState = {
-  items: [],
-  filter: '',
-};
-
-const items = createReducer(contactsInitialState.items, {
-  [addContact]: (state, { payload }) => {
+const items = createReducer([], {
+  [fetchContactsSuccess]: (_, { payload }) => {
+    return payload;
+  },
+  [addContactSuccess]: (state, { payload }) => {
     const nameArray = state.map(item => {
       return item.name;
     });
@@ -19,18 +28,38 @@ const items = createReducer(contactsInitialState.items, {
       return [...state, payload];
     }
   },
-  [deleteContact]: (state, { payload }) => {
+  [deleteContactSuccess]: (state, { payload }) => {
     return state.filter(({ id }) => id !== payload);
   },
 });
 
-const filter = createReducer(contactsInitialState.filter, {
-  [filterContact]: (_, { payload }) => {
+const filter = createReducer('', {
+  [filterContacts]: (_, { payload }) => {
     return payload.toLowerCase();
   },
 });
 
+const error = createReducer(null, {
+  [addContactError]: (_, action) => action.payload,
+  [addContactRequest]: () => null,
+  [deleteContactError]: (_, action) => action.payload,
+  [deleteContactRequest]: () => null,
+});
+
+const loading = createReducer(false, {
+  [fetchContactsRequest]: () => true,
+  [fetchContactsSuccess]: () => false,
+  [fetchContactsError]: () => false,
+  [addContactRequest]: () => true,
+  [addContactSuccess]: () => false,
+  [addContactError]: () => false,
+  [deleteContactRequest]: () => true,
+  [deleteContactSuccess]: () => false,
+  [deleteContactError]: () => false,
+});
 export default combineReducers({
   items,
   filter,
+  error,
+  loading,
 });
