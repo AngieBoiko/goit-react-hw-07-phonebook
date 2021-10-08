@@ -2,13 +2,13 @@
   "contacts": [
     {
       "name": "Anzhela Boiko",
-      "number": "092555",
-      "id": "81598589-e9a8-407a-a705-1f6407a4ea71"
+      "number": "0925556655",
+      "id": 1
     },
     {
-      "name": "ual",
-      "number": "565666",
-      "id": "7e218cc8-6da7-4161-bce4-bf3434593433"
+      "name": "Ivan Petrov",
+      "number": "065652952454",
+      "id": 2
     }
   ]
 }
