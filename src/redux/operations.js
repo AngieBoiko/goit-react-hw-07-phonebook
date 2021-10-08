@@ -27,12 +27,10 @@ export const fetchContacts = () => async dispatch => {
 export const addContact = contact => async dispatch => {
   dispatch(addContactRequest());
   const gettingData = await fetchContactsAPI();
-  console.log(gettingData);
   if (gettingData) {
     const nameArray = gettingData.map(item => {
       return item.name;
     });
-    console.log(nameArray);
     if (!nameArray.includes(contact.name)) {
       try {
         const addingContact = await addContactAPI(contact);
