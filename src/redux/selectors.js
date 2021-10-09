@@ -1,7 +1,10 @@
+import { createSelector } from 'reselect';
 export const getItems = state => state.contacts.items;
 export const getFilter = state => state.contacts.filter;
-export const getVisibleContacts = state => {
-  const items = getItems(state);
-  const filter = getFilter(state);
-  return items.filter(({ name }) => name.toLowerCase().includes(filter));
-};
+export const getLoadingStatus = state => state.contacts.loading;
+export const getVisibleContacts = createSelector(
+  [getItems, getFilter],
+  (items, filter) => {
+    return items.filter(({ name }) => name.toLowerCase().includes(filter));
+  },
+);
